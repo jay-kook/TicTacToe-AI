@@ -497,7 +497,7 @@ char selectComputerMode() {
         cout << "\nSelect Computer Difficulty:" << endl;
         cout << "E. Easy   (MCTS - low simulations)" << endl;
         cout << "M. Medium (MCTS - more simulations)" << endl;
-        cout << "H. Hard   (Minimax - perfect)" << endl;
+        cout << "H. Hard   (Minimax)" << endl;
         cout << "Enter your choice (E/M/H): ";
 
         cin >> aiChoice;
