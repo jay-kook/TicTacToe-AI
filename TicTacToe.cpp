@@ -14,10 +14,10 @@ using namespace std;
 
 // Define constants for players
 const char PLAYER = 'X';
-const char COMPUTER = 'O'; // Computer is also 'O'
+const char COMPUTER = 'O'; // Computer
 const int BOARD_SIZE = 3;
 
-// Define the board (using a global array for simplicity)
+// Define the board
 char board[BOARD_SIZE][BOARD_SIZE] = {
     {' ', ' ', ' '},
     {' ', ' ', ' '},
@@ -262,9 +262,7 @@ void mctsMove(int iterations) {
     }
 }
 
-/**
- * @brief Minimax algorithm to determine the best move for the computer.
- */
+// Minimax algorithm to determine the best move for the computer.
 int minimax(char currentBoard[BOARD_SIZE][BOARD_SIZE], int depth, bool isMaximizing, int alpha, int beta)
 {
     char winner = checkWinner(currentBoard);
@@ -314,9 +312,7 @@ int minimax(char currentBoard[BOARD_SIZE][BOARD_SIZE], int depth, bool isMaximiz
     }
 }
 
-/**
- * @brief Calculates and executes the computer's move using the Minimax algorithm.
- */
+// Calculates and executes the computer's move using the Minimax algorithm.
 void minimaxMove()
 {
     cout << "Computer is thinking..." << endl;
@@ -488,16 +484,14 @@ void player2Move()
     handlePlayerInput(COMPUTER, computerMoves);
 }
 
-/**
- * difficulty menu: E / M / H
- */
+// Difficulty menu: E (Easy)/ M (Medium) / H (Hard)
 char selectComputerMode() {
     char aiChoice;
     while (true) {
         cout << "\nSelect Computer Difficulty:" << endl;
-        cout << "E. Easy   (MCTS - low simulations)" << endl;
-        cout << "M. Medium (MCTS - more simulations)" << endl;
-        cout << "H. Hard   (Minimax)" << endl;
+        cout << "E. Random choice" << endl;
+        cout << "M. Monte Carlo Tree Search" << endl;
+        cout << "H. Minimax Algorithm" << endl;
         cout << "Enter your choice (E/M/H): ";
 
         cin >> aiChoice;
@@ -525,10 +519,24 @@ char selectComputerMode() {
 /**
  * Change these numbers anytime to rebalance difficulty.
  */
+
+void randomChoiceForDifficulty(char aiChoice, char currentBoard[BOARD_SIZE][BOARD_SIZE], int &row, int &column) {
+    if (aiChoice == 'E') {
+            while(true) {
+                row = rand() % 3;       // random row 0-2
+                column = rand() % 3;    // random column 0-2
+
+                if (currentBoard[row][column] == ' ') {
+                    return; // valid empty spot found
+                }
+            }
+        }
+}
+
+// Change these numbers anytime to rebalance the difficulty
 int mctsIterationsForDifficulty(char aiChoice) {
-    if (aiChoice == 'E') return 200;   // Easy
-    if (aiChoice == 'M') return 100000; // Medium
-    return 0;                          // Hard uses minimax
+    if (aiChoice == 'M') return 100000; // Runs 100000 simulations
+    return 0;                          
 }
 
 void printWinner(char winner, char chosenMode)
@@ -605,7 +613,7 @@ int main()
         if (chosenMode == '2') {
             aiChoice = selectComputerMode();
             if (aiChoice == 'H') cout << "AI chosen: Hard (Minimax).\n";
-            else if (aiChoice == 'M') cout << "AI chosen: Medium (MCTS - more sims).\n";
+            else if (aiChoice == 'M') cout << "AI chosen: Medium (MCTS - simulations).\n";
             else cout << "AI chosen: Easy (MCTS - fewer sims).\n";
         }
 
@@ -641,11 +649,23 @@ int main()
                     else
                     {
                         // *** UPDATED AI Selection Logic ***
-                        if (aiChoice == 'H') {
-                            minimaxMove();
-                        } else {
+                        if (aiChoice == 'H') 
+                        {
+                            minimaxMove();    
+                        }
+                       
+                        else if (aiChoice == 'M')
+                        {
                             int sims = mctsIterationsForDifficulty(aiChoice);
                             mctsMove(sims);
+                        }
+
+                        else if (aiChoice == 'E')
+                        {
+                            int r = 0, c = 0;
+                            randomChoiceForDifficulty(aiChoice, board, r, c);
+                            board[r][c] = COMPUTER;
+                            computerMoves.push_back(make_pair(r, c));
                         }
                     }
                 }
