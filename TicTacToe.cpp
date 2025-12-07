@@ -403,7 +403,7 @@ int minimax(char currentBoard[BOARD_SIZE][BOARD_SIZE],
  * Use minimax to choose and play the best possible move for the computer.
  */
 void minimaxMove() {
-    cout << "Computer is thinking (Minimax - Hard)..." << endl;
+    cout << "Computer thinking..." << endl;
 
     int bestScore = INT_MIN;
     Move bestMove = make_pair(-1, -1);
@@ -428,7 +428,7 @@ void minimaxMove() {
         board[bestMove.first][bestMove.second] = COMPUTER;
         computerMoves.push_back(bestMove);
     } else {
-        cout << "Error: Minimax could not find a valid move." << endl;
+        cout << "Error: could not find a valid move." << endl;
     }
 }
 
@@ -623,26 +623,26 @@ char selectComputerDifficulty() {
 
     while (true) {
         cout << "\nSelect Computer Difficulty:\n";
-        cout << "E. Easy   (Random moves)\n";
-        cout << "M. Medium (MCTS simulations)\n";
-        cout << "H. Hard   (Minimax algorithm)\n";
-        cout << "Enter your choice (E/M/H): ";
+        cout << "R. Regular  (Random moves)\n";
+        cout << "H. Hard (MCTS simulations)\n";
+        cout << "I. Impossible   (Minimax algorithm)\n";
+        cout << "Enter your choice (R/H/I): ";
 
         cin >> aiChoice;
 
         if (cin.fail()) {
-            cout << "Invalid input. Please enter E, M, or H.\n";
+            cout << "Invalid input. Please enter R, H, or I.\n";
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             continue;
         }
 
         aiChoice = toupper(aiChoice);
-        if (aiChoice == 'E' || aiChoice == 'M' || aiChoice == 'H') {
+        if (aiChoice == 'R' || aiChoice == 'H' || aiChoice == 'I') {
             break;
         }
 
-        cout << "Invalid choice. Please enter E, M, or H.\n";
+        cout << "Invalid choice. Please enter R, H, or I.\n";
     }
     return aiChoice;
 }
@@ -674,10 +674,9 @@ Move getRandomComputerMove(const char currentBoard[BOARD_SIZE][BOARD_SIZE]) {
  * More simulations = stronger but slower.
  */
 int getMctsIterationsForDifficulty(char aiChoice) {
-    if (aiChoice == 'M') {
-        // Medium: reasonable default. You can experiment:
-        // 1000, 5000, 10000, etc.
-        return 5000;
+    if (aiChoice == 'H') {
+        // Medium: reasonable default. 
+        return 10000; // Can change number of simulatioons
     }
     return 0;
 }
@@ -759,11 +758,11 @@ int main() {
         if (chosenMode == '1') {
             cout << "Mode chosen: Player vs Player\n";
         } else {
-            cout << "Mode chosen: Player vs Computer (AI)\n";
+            cout << "Mode chosen: Player vs Computer\n";
             aiChoice = selectComputerDifficulty();
-            if (aiChoice == 'H')      cout << "AI chosen: Hard (Minimax).\n";
-            else if (aiChoice == 'M') cout << "AI chosen: Medium (MCTS).\n";
-            else                      cout << "AI chosen: Easy (Random).\n";
+            if (aiChoice == 'I')      cout << "AI chosen: Impossible (Minimax).\n";
+            else if (aiChoice == 'H') cout << "AI chosen: Hard (MCTS).\n";
+            else                      cout << "AI chosen: Regular (Random).\n";
         }
 
         // ---- Inner loop: keep playing games in this mode until user stops ----
@@ -801,10 +800,10 @@ int main() {
                         playerMove();
                     } else {
                         // Computer's turn: use difficulty setting.
-                        if (aiChoice == 'H') {
+                        if (aiChoice == 'I') {
                             // Hard: Minimax
                             minimaxMove();
-                        } else if (aiChoice == 'M') {
+                        } else if (aiChoice == 'H') {
                             // Medium: MCTS
                             int sims = getMctsIterationsForDifficulty(aiChoice);
                             mctsMove(sims);
